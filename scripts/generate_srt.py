@@ -17,37 +17,32 @@ def process_audio(path):
     alg_model, metadata = whisperx.load_align_model(language_code=transcription["language"], device="cuda")
     aligned_transcription = whisperx.align(transcription["segments"], alg_model, metadata, audio, device="cuda", return_char_alignments=False)
     
-    print(aligned_transcription["segments"])
+    segment_audio(path, aligned_transcription)
     
     
-    
-    #segment_audio(path, sentences)
-    
-    
-def segment_audio(path, sentences):
+def segment_audio(path, sentences, buffer=200):
     
     audio = AudioSegment.from_file(path)
     srt = pysrt.SubRipFile()
     
-    start_time = 0
+    base_name = os.path.splitext(os.path.basename(path))[0]
+    os.makedirs(f"data/{base_name}", exist_ok=True)
     
-    for idx, sentence in enumerate(sentences):
+    for idx, sentence in enumerate(sentences["segments"]):
         
-        num_words = len(sentence.split())
-        duration = num_words / (WORDS_PER_MINUTE / (60 * 1000))
-        end_time = start_time + duration
+        start_time = sentence["start"] * 1000
+        end_time = sentence["end"] * 1000 + buffer
         
         start = pysrt.SubRipTime(milliseconds=start_time)
         end = pysrt.SubRipTime(milliseconds=end_time)
-        subtitle = pysrt.SubRipItem(index=idx, start=start, end=end, text=sentence)
+        subtitle = pysrt.SubRipItem(index=idx, start=start, end=end, text=sentence["text"])
         srt.append(subtitle)
         
         segment = audio[start_time:end_time]
-        segment.export(os.path.join("data/segments", f"segment_{idx}.wav"), format="wav")
+        segment.export(os.path.join(f"data/{base_name}", f"segment_{idx}.wav"), format="wav")
         
         start_time = end_time
-        
-    srt_name = f"{os.path.splitext(os.path.basename(path))[0]}.srt"
+    srt_name = f"data/{base_name}.srt"
     srt.save(srt_name, encoding = "utf-8")
     
     
