@@ -5,11 +5,13 @@ import pysrt
 from pydub import AudioSegment
 from pathlib import Path
 import shutil
+import inflect
+import contractions
 
 ASR_MODEL_ARCH = "large-v2"
 DEF_BASE_NAME = "segments"
 
-def process_audio(path, process_batch = False, buffer = 100, clean_dir = False):
+def process_audio(path, process_batch = False, buffer = 100, clean_dir = False, generate_metadata = True):
     
     setup_training_dir(path, process_batch, clean_dir)
     
@@ -25,10 +27,10 @@ def process_audio(path, process_batch = False, buffer = 100, clean_dir = False):
             if process_batch is False:
                 base_name = _get_name(audio_file)
             
-            segment_audio(audio_file, sentences, base_name, buffer, start_idx)
+            segment_audio(audio_file, sentences, base_name, buffer, start_idx, generate_metadata)
             
             if process_batch is True:
-                start_idx = len(sentences["segments"])
+                start_idx += len(sentences["segments"])
 
 def transcribe_audio(path):
     
@@ -74,10 +76,12 @@ def setup_training_dir(path, process_batch, clean_dir):
         print(f"initialized training directory: data/{base_name}")
     
     
-def segment_audio(path, sentences, base_name, buffer, start_idx):
+def segment_audio(path, sentences, base_name, buffer, start_idx, generate_metadata):
     
     audio = AudioSegment.from_file(path)
     srt = pysrt.SubRipFile()
+    
+    metadata = []
     
     for idx, sentence in enumerate(sentences["segments"]):
         
@@ -92,10 +96,29 @@ def segment_audio(path, sentences, base_name, buffer, start_idx):
         
         segment.export(os.path.join(f"data/{base_name}", f"segment_{idx + start_idx}.wav"), format="wav")
         
+        if generate_metadata:
+            
+            segment_name = os.path.join(f"data/{base_name}", f"segment_{idx + start_idx}.wav")
+            
+            metadata.append(f"{segment_name}|{sentence['text']}|{_expand_transcriptions(sentence['text'])}")
+        
         start_time = end_time
     srt_name = f"data/{_get_name(path)}.srt"
-    srt.save(srt_name, encoding = "utf-8")
+    #srt.save(srt_name, encoding = "utf-8")
     
+    if generate_metadata:
+        with open(f"data/metadata.txt", "a") as meta_file:
+            for line in metadata:
+                meta_file.write(line + "\n")
+                
+                
+def _expand_transcriptions(sentence):
+    
+    expander = inflect.engine()
+    expanded_numbers = expander.number_to_words(sentence)
+    expanded_contractions = contractions.fix(expanded_numbers)
+    
+    return expanded_contractions
     
 def _get_name(path):
     return os.path.splitext(os.path.basename(path))[0]
@@ -103,7 +126,7 @@ def _get_name(path):
     
 def main():
     
-    process_audio("data", process_batch = True, clean_dir = True)
+    process_audio("data", process_batch = True, clean_dir = True, generate_metadata = True)
     
 if __name__ == "__main__":
     main()
