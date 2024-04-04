@@ -103,7 +103,7 @@ def _get_name(path):
     
 def main():
     
-    process_audio("data", process_batch = False, clean_dir = True)
+    process_audio("data", process_batch = True, clean_dir = True)
     
 if __name__ == "__main__":
     main()
