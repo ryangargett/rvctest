@@ -115,7 +115,13 @@ def segment_audio(path, sentences, base_name, buffer, start_idx, generate_metada
 def _expand_transcriptions(sentence):
     
     expander = inflect.engine()
-    expanded_numbers = expander.number_to_words(sentence)
+    words = sentence.split()
+    for word in range(len(words)):
+        if words[word].isdigit():
+            words[word] = expander.number_to_words(words[word])
+    
+    expanded_numbers = " ".join(words)
+    
     expanded_contractions = contractions.fix(expanded_numbers)
     
     return expanded_contractions
