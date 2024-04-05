@@ -19,12 +19,12 @@ def main():
     
     print(f"files: {files}")
 
-    tts.tts_to_file(text = "This is a test input message. I am attempting to condition this model on a british female voice with amusement emotional context embedding. How did I do?",
+    tts.tts_to_file(text = "This is a test input message. I am attempting to condition this model on a british female voice with a happy emotional context embedding. How did I do?",
                     file_path = "output.wav",
-                    speaker_wav = files,
+                    speaker_wav = ["/home/ryan/projects/RVCTest/data/Georgia - Happiness - Mild.post.wav", "/home/ryan/projects/RVCTest/data/Georgia - Happiness - Moderate - v2.post.wav", "/home/ryan/projects/RVCTest/data/Georgia - Happiness - Moderate.post.wav"],
                     language = "en",
                     split_sentences = False,
-                    emotion = "happy")
+                    emotion = "excitement")
 
 if __name__ == "__main__":
     main()
