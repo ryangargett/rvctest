@@ -80,11 +80,11 @@ LANGUAGE = config_dataset.language
 def main():
     # init args and config
     model_args = GPTArgs(
-        max_conditioning_length=600000,  # 6 secs
-        min_conditioning_length=22050,  # 1 secs
+        max_conditioning_length=132300,  # 6 secs
+        min_conditioning_length=20000,  # 1 secs
         debug_loading_failures=True,
-        max_wav_length=600000,  # ~11.6 seconds
-        max_text_length=2000,
+        max_wav_length=500000,  # ~11.6 seconds
+        max_text_length=500,
         mel_norm_file=MEL_NORM_FILE,
         dvae_checkpoint=DVAE_CHECKPOINT,
         xtts_checkpoint=XTTS_CHECKPOINT,  # checkpoint path of the model that you want to fine-tune
@@ -116,11 +116,11 @@ def main():
         eval_split_size=0.3,
         eval_split_max_size=256,
         print_step=50,
-        plot_step=100,
-        log_model_step=1000,
-        epochs=5000,
-        save_step=1500,
-        save_n_checkpoints=1,
+        plot_step=50,
+        log_model_step=50,
+        epochs=40,
+        save_step=100,
+        save_n_checkpoints=100,
         save_checkpoints=True,
         # target_loss="loss",
         print_eval=False,
@@ -128,24 +128,24 @@ def main():
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
         optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
-        lr=5e-05,  # learning rate
+        lr=1e-05,  # learning rate
         lr_scheduler="MultiStepLR",
         # it was adjusted accordly for the new step scheme
         lr_scheduler_params={"milestones": [50000 * 18, 150000 * 18, 300000 * 18], "gamma": 0.5, "last_epoch": -1},
         test_sentences=[
             {
                 "text": "The architecture of the building is a fine testament to neoclassical design.",
-                "speaker_wav": "/home/ryan/projects/RVCTest/georgia_ds/neutral_trimmed.wav",
+                "speaker_wav": "/home/ryan/projects/RVCTest/neutral_trimmed.wav",
                 "language": LANGUAGE,
             },
             {
-                "text": "Wow, I can't believe we're finally launching this groundbreaking project today!",
-                "speaker_wav": "/home/ryan/projects/RVCTest/georgia_ds/excitement_trimmed.wav",
+                "text": "Wow!! I can't believe we're finally launching this groundbreaking project today!!",
+                "speaker_wav": "/home/ryan/projects/RVCTest/excitement_trimmed.wav",
                 "language": LANGUAGE,
             },
             {
                 "text": ": I'm sincerely sorry to hear about your recent challenges, and I can imagine how tough this time must be for you.",
-                "speaker_wav": "/home/ryan/projects/RVCTest/georgia_ds/empathy_trimmed.wav",
+                "speaker_wav": "/home/ryan/projects/RVCTest/empathy_trimmed.wav",
                 "language": LANGUAGE,
             },
         ],
