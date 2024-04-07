@@ -1,3 +1,13 @@
+##################################################
+# File: finetune_xtts.py                          #
+# Project: AdaptiveLLM                            #
+# Created Date: Sat Apr 06 2024                   #
+# Author: Ryan Gargett                            #
+# -----                                           #
+# Last Modified: Sun Apr 07 2024                  #
+# Modified By: Ryan Gargett                       #
+##################################################
+
 import os
 
 from trainer import Trainer, TrainerArgs
