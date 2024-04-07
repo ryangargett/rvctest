@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import inflect
 import contractions
+import soundfile as sf
 
 ASR_MODEL_ARCH = "large-v2"
 DEF_BASE_NAME = "segments"
@@ -96,16 +97,18 @@ def segment_audio(path, sentences, base_name, buffer, start_idx, generate_metada
         srt.append(subtitle)
         segment = audio[start_time:end_time]
 
-        segment.export(os.path.join(f"data/{base_name}", f"segment_{idx + start_idx}.wav"), format="wav")
+        segment_mono = segment.set_channels(1)
+        segment_reduced_sr = segment_mono.set_frame_rate(22050)
+        segment_reduced_sr.export(os.path.join(
+            f"data/{base_name}", f"segment_{idx + start_idx}.wav"), format="wav")
 
         if generate_metadata:
 
             segment_name = f"segment_{idx + start_idx}.wav"
-
             metadata.append(f"{segment_name}|{sentence['text']}|{_expand_transcriptions(sentence['text'])}")
 
         start_time = end_time
-    srt_name = f"data/{_get_name(path)}.srt"
+    # srt_name = f"data/{_get_name(path)}.srt"
     # srt.save(srt_name, encoding = "utf-8")
 
     if generate_metadata:
@@ -135,7 +138,7 @@ def _get_name(path):
 
 def main():
 
-    process_audio("data", process_batch=True, clean_dir=True, generate_metadata=True)
+    process_audio("georgia_ds", process_batch=True, clean_dir=True, generate_metadata=True)
 
 
 if __name__ == "__main__":
