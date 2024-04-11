@@ -9,17 +9,16 @@
 ##################################################
 
 STYLE_REFERENCE = {
-    "amusement": ["georgia_ds/amuse_1.wav"],
-    "compassion": ["compassion_1.wav", "compassion_2.wav"],
-    "concern": ["concern_1.wav"],
-    "curiosity": ["curiosity_1.wav", "curiosity_2.wav"],
-    "empathy": ["empathy_1.wav", "empathy_2.wav", "empathy_3.wav"],
-    "excitement": ["excite_1.wav", "excite_2.wav"],
+    "compassion": ["georgia_ds/compassion_1.wav", "georgia_ds/compassion_2.wav"],
+    "concern": ["georgia_ds/concern_1.wav"],
+    "curiosity": ["georgia_ds/curiosity_1.wav", "georgia_ds/curiosity_2.wav"],
+    "empathy": ["georgia_ds/empathy_1.wav", "georgia_ds/empathy_2.wav", "georgia_ds/empathy_3.wav"],
+    "excitement": ["georgia_ds/excite_1.wav", "georgia_ds/excite_2.wav"],
     "happiness": ["georgia_ds/happy_2.wav", "georgia_ds/happy_3.wav"],
-    "neutral": ["neutral_1.wav"],
-    "pride": ["pride_1.wav", "pride_2.wav"],
-    "supportive": ["support_1.wav", "support_2.wav"],
-    "surprise": ["surprise_1.wav", "surprise_2.wav"]
+    "neutral": ["georgia_ds/neutral_1.wav"],
+    "pride": ["georgia_ds/pride_1.wav", "georgia_ds/pride_2.wav"],
+    "supportive": ["georgia_ds/support_1.wav", "georgia_ds/support_2.wav"],
+    "surprise": ["georgia_ds/surprise_1.wav", "georgia_ds/surprise_2.wav"]
 }
 
 # Model config
