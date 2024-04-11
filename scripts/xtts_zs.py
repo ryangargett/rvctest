@@ -15,28 +15,9 @@ import torchaudio
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 
+import utils.config as cfg
+
 import time
-
-STYLE_REFERENCE = {
-    "amusement": ["georgia_ds/amuse_1.wav"],
-    "compassion": ["compassion_1.wav", "compassion_2.wav"],
-    "concern": ["concern_1.wav"],
-    "curiosity": ["curiosity_1.wav", "curiosity_2.wav"],
-    "empathy": ["empathy_1.wav", "empathy_2.wav", "empathy_3.wav"],
-    "excitement": ["excite_1.wav", "excite_2.wav"],
-    "happiness": ["georgia_ds/happy_2.wav", "georgia_ds/happy_3.wav"],
-    "neutral": ["neutral_1.wav"],
-    "pride": ["pride_1.wav", "pride_2.wav"],
-    "supportive": ["support_1.wav", "support_2.wav"],
-    "surprise": ["surprise_1.wav", "surprise_2.wav"]
-}
-
-# Add here the xtts_config path
-CONFIG_PATH = "/home/ryan/projects/RVCTest/out/GPT_XTTS_v2.0_GEORGIA_FT-April-06-2024_11+50PM-d6edb46/config.json"
-# Add here the vocab file that you have used to train the model
-TOKENIZER_PATH = "/home/ryan/projects/RVCTest/out/XTTS_v2.0_original_model_files/vocab.json"
-# Add here the checkpoint that you want to do inference with
-XTTS_CHECKPOINT = "/home/ryan/projects/RVCTest/out/GPT_XTTS_v2.0_GEORGIA_FT-April-06-2024_11+50PM-d6edb46/best_model_2610.pth"
 
 
 def _get_model_config(config_path):
@@ -61,10 +42,10 @@ def load_model(model_path, config_path, tokenizer_path):
 
 def generate_style(model, style):
 
-    if style not in STYLE_REFERENCE:
+    if style not in cfg.STYLE_REFERENCE:
         raise ValueError(f"Style '{style}' not found in reference lookup.")
 
-    reference = STYLE_REFERENCE[style]
+    reference = cfg.STYLE_REFERENCE[style]
 
     gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=reference)
     return gpt_cond_latent, speaker_embedding
@@ -94,7 +75,7 @@ def main():
 
     style_name = "happiness"
 
-    model = load_model(XTTS_CHECKPOINT, CONFIG_PATH, TOKENIZER_PATH)
+    model = load_model(cfg.XTTS_CHECKPOINT, cfg.CONFIG_PATH, cfg.TOKENIZER_PATH)
     gpt_cond_latent, speaker_embedding = generate_style(model, style_name)
 
     # model performs significantly better with emotionally aligned sentence context
